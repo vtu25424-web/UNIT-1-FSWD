@@ -1,0 +1,69 @@
+/* 1️⃣ Initiate and Commit a Transaction */
+
+START TRANSACTION;
+
+UPDATE students
+SET phone = '+911234567890'
+WHERE student_id = 1;
+
+COMMIT;
+
+
+/* 2️⃣ Set Savepoint, Perform Transaction and Rollback */
+
+START TRANSACTION;
+
+UPDATE students
+SET phone = '+911111111111'
+WHERE student_id = 2;
+
+SAVEPOINT sp1;
+
+UPDATE students
+SET phone = '+922222222222'
+WHERE student_id = 3;
+
+ROLLBACK TO sp1;
+
+COMMIT;
+
+
+/* 3️⃣ User-Defined Function for Simple Mathematical Calculation */
+
+DELIMITER //
+
+CREATE FUNCTION calculate_square(num INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    RETURN num * num;
+END //
+
+DELIMITER ;
+
+
+/* 4️⃣ User-Defined Function to Execute SELECT Query and Return Value */
+
+DELIMITER //
+
+CREATE FUNCTION get_student_count(dept_name VARCHAR(50))
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE total INT;
+
+    SELECT COUNT(*) INTO total
+    FROM students
+    WHERE department = dept_name;
+
+    RETURN total;
+END //
+
+DELIMITER ;
+
+
+/* Function Calls */
+
+SELECT calculate_square(5) AS square_result;
+
+SELECT get_student_count('CSE') AS total_students;
